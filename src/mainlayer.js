@@ -4,11 +4,11 @@
  * Mainlayer is the payments layer for AI agents and browser extensions.
  * Use this client to check user entitlements and gate premium features.
  *
- * Base URL: https://api.mainlayer.xyz
+ * Base URL: https://api.mainlayer.fr
  * Auth:     Authorization: Bearer <api_key>
  */
 
-const MAINLAYER_BASE_URL = 'https://api.mainlayer.xyz';
+const MAINLAYER_BASE_URL = 'https://api.mainlayer.fr';
 
 class MainlayerError extends Error {
   constructor(message, statusCode, body) {
