@@ -137,8 +137,8 @@ class EntitlementManager {
    * @returns {Promise<boolean>} - true if entitled, false otherwise.
    */
   async checkEntitlement(resourceId, payerId, opts = {}) {
-    if (!resourceId) throw new Error('checkEntitlement: resourceId is required');
-    if (!payerId) throw new Error('checkEntitlement: payerId is required');
+    if (!resourceId) throw new Error('EntitlementManager.checkEntitlement: resourceId is required');
+    if (!payerId) throw new Error('EntitlementManager.checkEntitlement: payerId is required');
 
     const key = this._storageKey(resourceId, payerId);
     const now = Date.now();
@@ -147,11 +147,15 @@ class EntitlementManager {
     if (!opts.forceRefresh) {
       const cached = await this._readCache(key);
       if (cached && cached.expiresAt > now) {
+        const remainingSeconds = Math.round((cached.expiresAt - now) / 1000);
         console.debug(
-          `[EntitlementManager] Cache hit for ${resourceId} (expires in ${Math.round((cached.expiresAt - now) / 1000)}s)`
+          `[EntitlementManager] Cache hit for ${resourceId} (${remainingSeconds}s remaining)`,
+          { entitled: cached.entitled }
         );
         return cached.entitled;
       }
+    } else {
+      console.debug(`[EntitlementManager] Force refresh requested for ${resourceId}`);
     }
 
     // Cache miss or expired — fetch from Mainlayer.

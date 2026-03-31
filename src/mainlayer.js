@@ -104,21 +104,29 @@ class MainlayerClient {
    * @property {Object}  [paymentInfo]   - Additional payment details returned by Mainlayer.
    */
   async checkEntitlement(resourceId, payerId) {
-    if (!resourceId) throw new Error('checkEntitlement: resourceId is required');
-    if (!payerId) throw new Error('checkEntitlement: payerId is required');
+    if (!resourceId) throw new MainlayerError('checkEntitlement: resourceId is required');
+    if (!payerId) throw new MainlayerError('checkEntitlement: payerId is required');
 
     const body = await this._request('/entitlements/check', {
       method: 'POST',
       body: JSON.stringify({ resourceId, payerId }),
     });
 
-    return {
+    const result = {
       entitled: Boolean(body.entitled),
       resourceId: body.resourceId || resourceId,
       payerId: body.payerId || payerId,
       expiresAt: body.expiresAt || null,
       paymentInfo: body.paymentInfo || null,
     };
+
+    console.debug('[Mainlayer] Entitlement check:', {
+      resourceId,
+      payerId: payerId.substring(0, 8) + '...',
+      entitled: result.entitled,
+    });
+
+    return result;
   }
 
   /**
@@ -137,9 +145,16 @@ class MainlayerClient {
    * @property {string} [billingType] - "one_time" | "subscription"
    */
   async discover(resourceId) {
-    if (!resourceId) throw new Error('discover: resourceId is required');
+    if (!resourceId) throw new MainlayerError('discover: resourceId is required');
 
-    const body = await this._request(`/resources/${encodeURIComponent(resourceId)}`);
+    const body = await this._request(`/resources/public/${encodeURIComponent(resourceId)}`);
+
+    console.debug('[Mainlayer] Resource discovered:', {
+      resourceId,
+      price: body.price,
+      currency: body.currency,
+    });
+
     return body;
   }
 
@@ -159,8 +174,8 @@ class MainlayerClient {
    * @property {string} [expiresAt]
    */
   async createPaymentSession(resourceId, payerId, successUrl, cancelUrl) {
-    if (!resourceId) throw new Error('createPaymentSession: resourceId is required');
-    if (!payerId) throw new Error('createPaymentSession: payerId is required');
+    if (!resourceId) throw new MainlayerError('createPaymentSession: resourceId is required');
+    if (!payerId) throw new MainlayerError('createPaymentSession: payerId is required');
 
     const payload = { resourceId, payerId };
     if (successUrl) payload.successUrl = successUrl;
@@ -169,6 +184,11 @@ class MainlayerClient {
     const body = await this._request('/payments/sessions', {
       method: 'POST',
       body: JSON.stringify(payload),
+    });
+
+    console.debug('[Mainlayer] Payment session created:', {
+      sessionId: body.sessionId,
+      resourceId,
     });
 
     return {
