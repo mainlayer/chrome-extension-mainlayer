@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Premium Extension</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-mark"></div>
+      <span class="header-title">My Premium Extension</span>
+    </div>
+    <div class="entitlement-badge" id="entitlementBadge">
+      <span class="badge-dot"></span>
+      <span class="badge-label" id="badgeLabel">Checking...</span>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <!-- Free Features Section -->
+    <section class="section">
+      <h2 class="section-title">Free Features</h2>
+      <div class="feature-list">
+        <div class="feature-item free">
+          <div class="feature-icon">&#10003;</div>
+          <div class="feature-content">
+            <p class="feature-name">Basic Page Analysis</p>
+            <p class="feature-desc">View word count, page metadata, and structure.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btnPageAnalysis">Run</button>
+        </div>
+        <div class="feature-item free">
+          <div class="feature-icon">&#10003;</div>
+          <div class="feature-content">
+            <p class="feature-name">Highlight Text</p>
+            <p class="feature-desc">Highlight any selected text on the page.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btnHighlight">Run</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <hr class="divider" />
+
+    <!-- Premium Features Section -->
+    <section class="section">
+      <h2 class="section-title">
+        Premium Features
+        <span class="premium-tag">PRO</span>
+      </h2>
+
+      <!-- Loading state -->
+      <div id="premiumLoading" class="loading-state">
+        <div class="spinner"></div>
+        <span>Checking your access...</span>
+      </div>
+
+      <!-- Unlocked state (entitled) -->
+      <div id="premiumUnlocked" class="feature-list hidden">
+        <div class="feature-item premium unlocked">
+          <div class="feature-icon premium-icon">&#9733;</div>
+          <div class="feature-content">
+            <p class="feature-name">AI Page Summary</p>
+            <p class="feature-desc">Instantly summarize any webpage with AI.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" id="btnAiSummary">Run</button>
+        </div>
+        <div class="feature-item premium unlocked">
+          <div class="feature-icon premium-icon">&#9733;</div>
+          <div class="feature-content">
+            <p class="feature-name">Export Data</p>
+            <p class="feature-desc">Export page content as JSON, CSV, or PDF.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" id="btnExport">Run</button>
+        </div>
+        <div class="feature-item premium unlocked">
+          <div class="feature-icon premium-icon">&#9733;</div>
+          <div class="feature-content">
+            <p class="feature-name">Auto Fill Forms</p>
+            <p class="feature-desc">Auto-detect and fill forms with saved data.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" id="btnAutoFill">Run</button>
+        </div>
+      </div>
+
+      <!-- Locked state (not entitled) -->
+      <div id="premiumLocked" class="locked-state hidden">
+        <div class="locked-features">
+          <div class="feature-item premium locked">
+            <div class="feature-icon lock-icon">&#128274;</div>
+            <div class="feature-content">
+              <p class="feature-name">AI Page Summary</p>
+              <p class="feature-desc">Instantly summarize any webpage with AI.</p>
+            </div>
+          </div>
+          <div class="feature-item premium locked">
+            <div class="feature-icon lock-icon">&#128274;</div>
+            <div class="feature-content">
+              <p class="feature-name">Export Data</p>
+              <p class="feature-desc">Export page content as JSON, CSV, or PDF.</p>
+            </div>
+          </div>
+          <div class="feature-item premium locked">
+            <div class="feature-icon lock-icon">&#128274;</div>
+            <div class="feature-content">
+              <p class="feature-name">Auto Fill Forms</p>
+              <p class="feature-desc">Auto-detect and fill forms with saved data.</p>
+            </div>
+          </div>
+        </div>
+        <div class="upgrade-card">
+          <p class="upgrade-headline">Unlock Premium Features</p>
+          <p class="upgrade-sub">Get instant access to AI summaries, data export, and more.</p>
+          <button class="btn btn-upgrade" id="btnUpgrade">
+            Upgrade Now &rarr;
+          </button>
+          <p class="upgrade-note">One-time payment &bull; Instant access &bull; No subscription</p>
+        </div>
+      </div>
+
+      <!-- Error state -->
+      <div id="premiumError" class="error-state hidden">
+        <p class="error-msg" id="errorMsg">Could not check your access. Please try again.</p>
+        <button class="btn btn-secondary btn-sm" id="btnRetry">Retry</button>
+      </div>
+    </section>
+
+    <!-- Output area -->
+    <div id="outputArea" class="output-area hidden">
+      <div class="output-header">
+        <span class="output-title" id="outputTitle">Output</span>
+        <button class="btn-close" id="btnCloseOutput">&times;</button>
+      </div>
+      <div class="output-content" id="outputContent"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>Powered by <a href="https://mainlayer.xyz" target="_blank" rel="noopener">Mainlayer</a></span>
+    <button class="btn-link" id="btnRefreshStatus">Refresh status</button>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
